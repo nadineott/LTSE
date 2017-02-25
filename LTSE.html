@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<head>
+  <title>OttLTSE</title>
+  <link href = "LTSE.css" rel = "stylesheet">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+  <script src="LTSE.js"></script>
+</head>
+
+<body>
+
+<div ng-app="calculator">
+<div ng-controller="calculatorController">
+<div class = "box">
+
+
+<h1 class = "center">User Take Home Calculator</h1>
+<div class = "dataEntry">
+  <form ng-repeat = "input in inputs">
+    {{input.title}}
+    <img class = "moreInfo" src = "Images/question_mark.png">
+    <div class = 'hiddenDescription'>{{input.description}}</div>
+    <br>
+    <input type = "text" id = "{{input.title}}">
+  </form>
+
+  Grant vesting schedule<br><br>
+  <div class = "sched" ng-repeat = "schedule in schedules">
+   <input type="radio" name="schedule" value = {{schedule}} id = "schedule">
+        <table>
+      <tr>
+        <th>Years:</th>
+        <td ng-repeat = "index in schedule">
+        {{$index +1}}
+        </td>
+      </tr>
+      <tr>
+        <th>%Vest:</th>
+        <td ng-repeat = "value in schedule">
+        {{schedule[$index]}}%
+        </td>
+      </tr>
+    </table>
+  </div>
+
+<div id = "events">
+  Fundraising milestones (optional)
+  <img class = "moreInfo" src = "Images/question_mark.png">
+    <div class = 'hiddenDescription'>{{milestones}}</div><br>
+  $<input type = "text" id = "amount">
+  raised on <br>$<input type = "text" id = "raisedOn">pre-money valuation<br>
+</div>
+<button ng-click="helpers.addTemplate()">Add another milestone</button>
+<br>
+  Leaving after how many months<br>
+  <select id = "exit">
+    <option value = "0">Less than 1 year</option>
+    <option value = "1">1 to 2 years</option>
+    <option value = "2">2 to 3 years</option>
+    <option value = "3">3 to 4 years</option>
+    <option value = "4">More than 4 years</option>
+  </select>
+  <br>
+
+Exit valuation<br>
+  <input type = "text" id = "exitValuation"><br>
+  <button class = "center calculate" ng-click = "submit()">Calculate take home</button>
+</div>
+
+<div class = "results center">
+  Take home:
+  <div class = "center displayRegion">
+    <h2>{{takeHome}}</h2>
+  </div>
+</div>
+
+</div>
+</div>
+</div>
+</body>
+
+</html>

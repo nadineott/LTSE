@@ -1,0 +1,100 @@
+body {
+  background-color:  #d9d9d9;
+}
+
+.box {
+  position: absolute;
+  width: 80%;
+  top: 7%;
+  left: 10%;
+  padding: .5em;
+  background-color: #f2f2f2;
+}
+
+.hiddenDescription {
+  display: none;
+  z-index: 1;
+  max-width: 20%;
+}
+
+.moreInfo:hover + .hiddenDescription{
+  display: inline-block;
+  position: absolute;
+  background-color: #d9d9d9;
+  padding: .2em;
+  border-radius: 3px;
+}
+
+.moreInfo {
+  max-width: .7em;
+}
+
+.dataEntry, .results{
+  float: left;
+  padding: 1.3em;
+  width: 40%;
+}
+
+.dataEntry {
+  margin-left: 4em;
+  width: 40%;
+}
+
+.results{
+  font-size: 1.3em;
+}
+
+.displayRegion {
+  margin: 1em;
+  background-color: white;
+  padding: 1em;
+}
+
+.calculate{
+    font-size: 1.3em;
+}
+
+button {
+  background-color: white;
+  border-radius: 3px;
+  border: .1em solid grey;
+  margin: 1em;
+}
+
+button:hover {
+  background-color: lightgrey;
+  color: white;
+}
+
+button:focus {
+  outline: 0;
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+form > input, select  {
+  margin-bottom: 1.2em;
+}
+
+#events > input {
+  margin-bottom: 1.2em;
+}
+
+.sched {
+  padding-bottom: 1em;
+}
+
+table{
+  display: inline;
+}
+
+table, tr, th, td{
+  padding: 7px;
+}
+
+tr:nth-child(even) {background: #CCC}
+tr:nth-child(odd) {background: #FFF}
