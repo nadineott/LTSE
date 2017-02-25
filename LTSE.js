@@ -26,10 +26,9 @@ angular.module('calculator', [])
       var fundingEvent = '$<input type = "text" id = "amount">raised on <br>$<input type = "text" id = "raisedOn">pre-money valuation<br>';
       document.getElementById('events').innerHTML += fundingEvent;
     },
-    sharesVested: function(totalShares, exitYears){
+    sharesVested: function(totalShares, exitYears,scheduleSelected){
       totalShares = parseInt(totalShares);
       exitYears = parseInt(exitYears);
-      var scheduleSelected = document.querySelector('input[name="schedule"]:checked').value;
       scheduleSelected = scheduleSelected.slice(1, -1);
       scheduleSelected = scheduleSelected.split(',');
       var ind = (parseInt(exitYears))-1;
@@ -37,16 +36,28 @@ angular.module('calculator', [])
       var vest = parseInt(scheduleSelected[(parseInt(exitYears))-1]) || 0;
       return Math.floor(totalShares*(vest/100));
       },
-      cost: function(shares){
+      cost: function(shares, strikePrice){
         shares = parseInt(shares);
-        strikePrice = document.getElementById("Strike price").value;
         return shares*strikePrice;
       },
-      sharesValue: function(shares){
+      sharesValue: function(shares, exitVal, totalOShares){
         shares = parseInt(shares);
-        exitVal = document.getElementById("exitValuation").value;
-        totalShares = document.getElementById("Total number of outstanding shares in company").value;
-        return (shares/totalShares)*exitVal;
+        return (shares/totalOShares)*exitVal;
+      },
+      checkInputs: function(arrOfNumbers){
+        var error = false;
+        for (var i = 0; i < arrOfNumbers.length; i=i+2){
+          var item = parseInt(arrOfNumbers[i]);
+          var itemID = arrOfNumbers[i+1];
+          if (isNaN(item) || item === ''){
+            //outline problem div in red
+            document.getElementById(itemID).style.border = ".2em solid red";
+            error = true;
+          } else {
+            //set css to normal around corresponding ID for reset purposes
+            document.getElementById(itemID).style.border = "1px solid lightgrey";
+          }
+        } return error;
       }
   }
 })
@@ -59,20 +70,25 @@ angular.module('calculator', [])
   $scope.milestones = "Fundraising milestones are events such as securing series funding. These are important because they influence the overall valuation of a company as well as contribute to FD%."
 
   $scope.submit = function(){
-    var totalShares = document.getElementById("Number of shares in grant").value;
+    //collect input values
+    var scheduleSelected = document.querySelector('input[name="schedule"]:checked').value;
     var exitYears = document.getElementById("exit").options[document.getElementById("exit").selectedIndex].value;
-    var shares = $scope.helpers.sharesVested(totalShares,exitYears);
-    var sharesCost = $scope.helpers.cost(shares);
-    var sharesValue = $scope.helpers.sharesValue(shares);
-    var result = (sharesValue-sharesCost).toFixed(2);
-
-    if (result < 0){
-      $scope.takeHome = "No profit";
-    } else if (!result){
-      $scope.takeHome = "Error, please check inputs";
-    }else {
-      $scope.takeHome = "$"+result;
+    var totalShares = $scope.helpers.grabInput("Number of shares in grant");
+    var strikePrice = $scope.helpers.grabInput("Strike price");
+    var exitVal = $scope.helpers.grabInput("exitValuation");
+    var totalOShares = $scope.helpers.grabInput("Total number of outstanding shares in company");
+    //if there are input errors hilight them and display error message
+    if ($scope.helpers.checkInputs([totalShares, "Number of shares in grant", strikePrice, "Strike price", exitVal, "exitValuation", totalOShares, "Total number of outstanding shares in company"])){
+      $scope.takeHome = "Error, please check highlighted inputs";
+      } else {
+        var shares = $scope.helpers.sharesVested(totalShares,exitYears, scheduleSelected);
+        var sharesCost = $scope.helpers.cost(shares, strikePrice);
+        var sharesValue = $scope.helpers.sharesValue(shares, exitVal, totalOShares);
+        var result = (sharesValue-sharesCost).toFixed(2);
+        if (result < 0){
+          $scope.takeHome = "No profit";
+        }
+          $scope.takeHome = "$"+result;
+        }
     }
-  }
-
 })
